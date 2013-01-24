@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.HierarchicalData;
+			import mx.controls.Alert;
+			import mx.events.ListEvent;
+			import mx.rpc.AbstractOperation;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.remoting.RemoteObject;
+			
+			
+			/**
+			 * Objet de communication entre php et flex
+			 */
+			private var gateway:RemoteObject;
+			
+			/**
+			 * La méthode qui PHP qui fait le pont
+			 */
+			private var operation:String = "siteWebManagerCommand";
+			
+			/**
+			 * Raccourci sur l'opération
+			 */
+			private var sender:AbstractOperation;
+			
+			
+			/**
+			 * Initialise le module :
+			 * - Initialisation de l'interface
+			 * - Création du pont de communication flex php
+			 * - Envoi d'une commande à php pour récupérer les données du site
+			 */
+			public function init():void {
+				gateway = new RemoteObject("onLine");
+				gateway.source = "BatiWebAppsLightGate";
+				gateway.showBusyCursor = true;
+				gateway.addEventListener(FaultEvent.FAULT, faultRequest, false, 0, true);
+				configureEventListeners(gateway, false);
+				sender = gateway.getOperation(operation);
+				sender.send("init");
+				
+				// ... TODO
+			}
+			
+			/**
+			 * Décharge le composant
+			 */
+			public function free():void {
+				sender.send('kill');
+				configureEventListeners(gateway, true);
+				gateway.removeEventListener(FaultEvent.FAULT, faultRequest);
+				// ... TODO
+			}
+			
+			/**
+			 * Gestion des evts pour la communication
+			 */
+			private function configureEventListeners(ro:RemoteObject, remove:Boolean):void {
+				if (remove) ro.getOperation(operation).removeEventListener(ResultEvent.RESULT, dataReceived);
+				ro.getOperation(operation).addEventListener(ResultEvent.RESULT, dataReceived, false, 0, true);
+			}
+			
+			/**
+			 * Retour d'une requête PHP
+			 */
+			private function dataReceived(event:ResultEvent):void {
+				var obj:Object = event.result as Object;
+				if(obj != null){
+					var name:String;
+					for(name in obj){
+						switch(name){
+							case "listPage":
+								dg.dataProvider = obj[name];
+								
+								var h:HierarchicalData = new HierarchicalData(obj[name]);
+								h.childrenField = 'children';
+								adg.dataProvider = h;
+								break;
+							case "listModule":
+								
+								break;
+							case "article":
+								txtTitre.text = obj[name]["titre"];
+								content.text = obj[name]["contenu"];
+								break;
+							case "error":
+								Alert.show(obj[name], 'Erreur');
+								break;
+						}
+					}
+					
+				}
+			}
+			
+			/**
+			 * Affichage des erreurs de communications
+			 */
+			private function faultRequest(event:FaultEvent):void{
+				Alert.show(event.fault.faultDetail+"\n"+event.fault.faultString,event.fault.faultCode);
+			}
+			
+			
+			private function clickDg(event:ListEvent):void{
+				var id:String = dg.selectedItem["id"] ;
+				sender.send("openArticle", id);
+				
+				
+				
+				/* comm javascript
+				ExternalInterface.addCallback("err", err);
+				ExternalInterface.call("eddd", );*/
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:AdvancedDataGrid id="adg" designViewDataType="tree" displayItemsExpanded="true">
+		<mx:columns>
+			<mx:AdvancedDataGridColumn  headerText="Id page" dataField="id" />
+			<mx:AdvancedDataGridColumn headerText="Libellé" dataField="lib" />
+		</mx:columns>
+	</mx:AdvancedDataGrid>
+	
+	<mx:DataGrid id="dg" width="300" itemClick="clickDg(event)">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Id page" dataField="id" />
+			<mx:DataGridColumn headerText="Libellé" dataField="lib" />
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<mx:HBox >
+		<mx:Label text="Titre :" />
+		<mx:TextInput id="txtTitre" />
+	</mx:HBox>
+	<mx:RichTextEditor id="content" />
+</mx:VBox>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+	<services>
+		<service id="roGateway-flashremoting-service" class="flex.messaging.services.RemotingService" messageTypes="flex.messaging.messages.RemotingMessage">
+			<destination id="onLine">
+				<channels>
+					<channel ref="onLineBTService"/>
+				</channels>
+				<properties>
+					<source>*</source>
+				</properties>
+			</destination>
+		</service>
+	</services>
+	<channels>
+		<channel-definition id="onLineBTService" class="mx.messaging.channels.AMFChannel" >
+			<endpoint uri="/classesBT/gate/gateway.php" class="flex.messaging.endpoints.AMFEndpoint" />
+		</channel-definition>
+	</channels>
+</services-config>

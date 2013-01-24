@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" minWidth="955" minHeight="600" xmlns:local="*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.IndexChangedEvent;
+			
+			
+			/**
+			 * Lorsque l'utilisateur clique sur le bouton "Site Web Manager"
+			 */
+			protected function btnSiteWebManagerClickHandler(event:MouseEvent):void {
+				tabNav.selectedIndex = 1;
+			}
+			
+			/**
+			 * Lorsque l'onglet sélectionné a changé
+			 */
+			protected function tabNavChangeHandler(event:IndexChangedEvent):void {
+				if (tabNav.selectedChild == siteWebManagerContainer) {
+					siteWebManager.init();
+				}
+			}
+
+		]]>
+	</mx:Script>
+
+	
+	<mx:TabNavigator id="tabNav" width="100%" height="100%" change="tabNavChangeHandler(event)">
+		<mx:VBox id="accueilContainer" label="Accueil" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+			<mx:Label text="Accueil" />
+			<mx:Spacer height="200" />
+			<mx:Button id="btnSiteWebManager" label="Site Web Manager" click="btnSiteWebManagerClickHandler(event)" />
+			<mx:Button label="Kill Site Web Manager" click="{siteWebManager.free()}" />
+		</mx:VBox>
+		<mx:VBox id="siteWebManagerContainer" width="100%" height="100%" label="Gestion SiteWeb">
+			<local:SiteWebManager id="siteWebManager" width="100%" height="100%" />
+		</mx:VBox>
+	</mx:TabNavigator>
+</mx:Application>
