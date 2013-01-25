@@ -1,11 +1,11 @@
-ï»¿<?php
+<?php
 class MenuDAO extends DAO{
 	
 	public function create($object) {
 	
 	}
 	
-	//Retourne un Menu spÃ©cifique
+	//Retourne un Menu spécifique
 	//OK
 	public function read($no) {
 		$ligne1 = $this->db->prepare('SELECT * FROM jml_menu where id=?');
@@ -33,7 +33,7 @@ class MenuDAO extends DAO{
 	}
 	
 	
-	//vÃ©rifie la prÃ©sence ou non de l'id dans la table
+	 //Fonction qui renvoie true si l'enquête de début à déjà été remplie (ou en partie) et false sinon
 	public function exists($id) {
 		$nb1 = $this->db->prepare('SELECT COUNT(*) AS nb FROM jml_menu WHERE id=?');
 		$nb1->bindParam(1, $id, PDO::PARAM_INT);
@@ -42,10 +42,9 @@ class MenuDAO extends DAO{
 		return ($nb['nb'] == 1) ? true : false;
 	}
 	
-	//Fonction d'Ajout / Mise Ã  jour d'un Menu
 	public function persist(Menu $menu) {
 		// Cas d'un update
-		if($this->exists($menu->getId())) {
+		//if($this->exists($menu->getId())) {
 			$req = $this->db->prepare(
 				'UPDATE jml_menu SET 
 				id 				  = :id,
@@ -63,18 +62,16 @@ class MenuDAO extends DAO{
 				template_style_id = :template_style_id
 				WHERE id = :id
 			');
-		}
+		//}
 		// Cas d'un insert
-		else {
-			$req = $this->db->prepare('INSERT INTO jml_menu 
-					(id, menutype, title, alias, note, path, link,
-					type, published, parent_id, level, img, template_style_id)
-					VALUES
-					(:id, :menutype, :title, :alias, :note, :path, :link,
-					:type, :published, :parent_id, :level, :img, :template_style_id)
-					');
-		}
+		//else {
 		
+			/*$req = $this->db->prepare('INSERT INTO jml_menu 
+					(...)
+					values
+					(...)
+					');*/
+		//}
 		//Tableau de récupération des valeurs du param $menu
 		//qui sont insérées dans la requete
 		$array = array(
@@ -96,18 +93,11 @@ class MenuDAO extends DAO{
 		return $req->execute($array);
 	}
 	
-	//Override
 	public function update($object) {
 	
 	}
 	
-	//Override
 	public function delete($object) {
-		$idSupp = $object->getId();
-		
-		$req = $this->db->prepare('DELETE FROM jml_menu 
-									WHERE id = ?'); 
-		$req->bindParam(1, $idSupp, PDO::PARAM_INT);
-		return $req->execute();
+	
 	}
 }
