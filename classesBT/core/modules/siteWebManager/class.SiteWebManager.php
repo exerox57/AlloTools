@@ -3,7 +3,7 @@
 class SiteWebManager {
 	
 	/**
-	 * Contient les résultats à renvoyer à PHP
+	 * Contient les rÃ©sultats à renvoyer à PHP
 	 */
 	private $result;
 	
@@ -43,7 +43,7 @@ class SiteWebManager {
 		$this->result = array();
 		if (!empty($cmd) && method_exists($this, $cmd)) {
 			$res = call_user_func(array($this, $cmd), $data);
-			if ($res === false) $this->result['error'] = 'Erreur : Problème avec la fonction '.$cmd.' de '.__CLASS__;
+			if ($res === false) $this->result['error'] = 'Erreur : ProblÃ¨me avec la fonction '.$cmd.' de '.__CLASS__;
 		}
 		return $this->result;
 	}
@@ -56,20 +56,35 @@ class SiteWebManager {
 	public function init($data) {
 	
 		//Test avec BDD
-		$aDAO = new AssetsDAO();
+		$aDAO = new MenuDAO();
 		//var $i = 3;
 		$tx = '';
 		
-		$this->result['listPage'] = array(array('id'=>0, 'lib'=>'page 1'), array('id'=>1, 'lib'=>'page 2'),array('id'=>2, 'lib'=>'page 3'));
+		$this->result['listPage'] = array();
 		
-		for($i = 3; $i < 15; $i++){
+		for($i = 1; $i < 15; $i++){
 			$a = $aDAO->read($i);
-			$n = $a->getName();
+			$n = $a->getTemplateStyleId();
 			$this->result['listPage'][] = array('id'=>"$i", 'lib'=>$n);
 		}
 		
-		$this->result['listPage'][4]['children'] = array(array('id'=>"75i", 'lib'=>'fggg'));
+		//Test Update
+		/*
+		$m1 = $aDAO->read(21);
+		$m1->setId(102);
+		$resultat = $aDAO->persist($m1);*/
 		
+		//Test Insert
+		/*$m1 = $aDAO->read(101);
+		$m1->setId(103);
+		$resultat = $aDAO->persist($m1);*/
+		
+		//Test Delete
+		/*$m1 = $aDAO->read(102);
+		$res = $aDAO->delete($m1);*/
+		
+		//Fils
+		//$this->result['listPage'][4]['children'] = array(array('id'=>"75i", 'lib'=>'fggg'));
 		
 		$this->result['listModule'] = array();
 	}
