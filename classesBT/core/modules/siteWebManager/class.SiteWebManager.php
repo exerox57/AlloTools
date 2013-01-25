@@ -1,14 +1,14 @@
-<?php
+ï»¿<?php
 
 class SiteWebManager {
 	
 	/**
-	 * Contient les résultats à renvoyer à PHP
+	 * Contient les rÃ©sultats Ã  renvoyer Ã  PHP
 	 */
 	private $result;
 	
 	/**
-	 * Identifiant de la société à qui appartient le site
+	 * Identifiant de la sociÃ©tÃ© qui appartient le site
 	 * @var string
 	 */
 	private $idRevend;
@@ -23,27 +23,27 @@ class SiteWebManager {
 	}
 	
 	/**
-	 * Création d'une instance du module (préinitialisation)
-	 * @param string $idRevend Identifiant de la société connectée
+	 * CrÃ©ation d'une instance du module (prÃ©initialisation)
+	 * @param string $idRevend Identifiant de la sociÃ©tÃ© connectÃ©e
 	 */
 	public static function create($idRevend) {
-		// Préinitialisation
+		// PrÃ©initialisation
 		// ...
-		// ... Gestion d'un autre paramètre, ou d'un objet englobant.... A voir en fonction de l'UML
+		// ... Gestion d'un autre paramÃªtre, ou d'un objet englobant.... A voir en fonction de l'UML
 		// ...
 		return new SiteWebManager($idRevend);
 	}
 	
 	/**
 	 * Dispatcheur de commande
-	 * @param string $cmd Nom de la fonction à exéctuer
-	 * @param array $data Paramètre de la fonction à exécuter
+	 * @param string $cmd Nom de la fonction Ã  exÃ©ctuer
+	 * @param array $data ParamÃªtre de la fonction Ã  exÃ©cuter
 	 */
 	public function parseCommand($cmd, $data) {
 		$this->result = array();
 		if (!empty($cmd) && method_exists($this, $cmd)) {
 			$res = call_user_func(array($this, $cmd), $data);
-			if ($res === false) $this->result['error'] = 'Erreur : Problème avec la fonction '.$cmd.' de '.__CLASS__;
+			if ($res === false) $this->result['error'] = 'Erreur : ProblÃ¨me avec la fonction '.$cmd.' de '.__CLASS__;
 		}
 		return $this->result;
 	}
@@ -56,20 +56,35 @@ class SiteWebManager {
 	public function init($data) {
 	
 		//Test avec BDD
-		$aDAO = new AssetsDAO();
+		$aDAO = new MenuDAO();
 		//var $i = 3;
 		$tx = '';
 		
-		$this->result['listPage'] = array(array('id'=>0, 'lib'=>'page 1'), array('id'=>1, 'lib'=>'page 2'),array('id'=>2, 'lib'=>'page 3'));
+		$this->result['listPage'] = array();
 		
-		for($i = 3; $i < 15; $i++){
+		for($i = 1; $i < 15; $i++){
 			$a = $aDAO->read($i);
-			$n = $a->getName();
+			$n = $a->getTemplateStyleId();
 			$this->result['listPage'][] = array('id'=>"$i", 'lib'=>$n);
 		}
 		
-		$this->result['listPage'][4]['children'] = array(array('id'=>"75i", 'lib'=>'fggg'));
+		//Test Update
+		/*
+		$m1 = $aDAO->read(21);
+		$m1->setId(102);
+		$resultat = $aDAO->persist($m1);*/
 		
+		//Test Insert
+		/*$m1 = $aDAO->read(101);
+		$m1->setId(103);
+		$resultat = $aDAO->persist($m1);*/
+		
+		//Test Delete
+		/*$m1 = $aDAO->read(102);
+		$res = $aDAO->delete($m1);*/
+		
+		//Fils
+		//$this->result['listPage'][4]['children'] = array(array('id'=>"75i", 'lib'=>'fggg'));
 		
 		$this->result['listModule'] = array();
 	}
