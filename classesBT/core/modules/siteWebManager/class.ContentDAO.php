@@ -17,28 +17,14 @@ class ContentDAO extends DAO{
 		return new Content($ligne);
 	}
 	
-	//Retourne un tableau de Content
-	public function listeContent(){
-		//Selection des attributs importants pour l'utilisateur
-		$ligne1 = $this->db->prepare('SELECT id, title, alias, introtext, fulltext, state, created FROM jml_content');
-		$ligne1->execute();
-		$ligne = $ligne1->fetch(PDO::FETCH_ASSOC);
+	//Récuparation de la liste des ID Content
+	public function findAllId() {
+		$requete = $this->db->prepare('SELECT id FROM jml_content');
+		$requete->execute();
+		$tableIdContent = $requete->fetchAll(PDO::FETCH_ASSOC);
 		
-		foreach($lignes as $ligne) {
-			$menus[] = new Content($donnees = array(
-				'id'=>(int) $ligne['id'], 
-				'title'=>$ligne['title'], 
-				'alias' =>$ligne['alias'], 
-				'introtext' =>$ligne['introtext'],
-				'fulltext' =>$ligne['fulltext'],
-				'state' =>$ligne['state'],
-				'created' =>$ligne['created']
-			));
-		}
-			
-		return $contents;
+		return $tableIdContent;
 	}
-	
 	
 	//vérifie la présence ou non de l'id dans la table
 	public function exists($id) {

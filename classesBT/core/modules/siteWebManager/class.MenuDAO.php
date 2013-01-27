@@ -17,21 +17,14 @@ class MenuDAO extends DAO{
 		return new Menu($ligne);
 	}
 	
-	//Retourne un tableau de Menu
-	//A TESTER
-	public function listeMenu(){
-		//Selection des attributs importants pour l'utilisateur
-		$ligne1 = $this->db->prepare('SELECT id, menutype, title, alias, link FROM jml_menu');
-		$ligne1->execute();
-		$ligne = $ligne1->fetch(PDO::FETCH_ASSOC);
+	//Récupération de la liste de ID Menu
+	public function findAllId() {
+		$requete = $this->db->prepare('SELECT id FROM jml_menu');
+		$requete->execute();
+		$tableIdMenu = $requete->fetchAll(PDO::FETCH_ASSOC);
 		
-		foreach($lignes as $ligne) {
-			$menus[] = new Menu($donnees = array('id'=>(int) $ligne['id'], 'menutype' =>$ligne['menutype'], 'title'=>$ligne['title'], 'alias' =>$ligne['alias'], 'link' =>$ligne['link']));
-		}
-			
-		return $menus;
+		return $tableIdMenu;
 	}
-	
 	
 	//vÃ©rifie la prÃ©sence ou non de l'id dans la table
 	public function exists($id) {

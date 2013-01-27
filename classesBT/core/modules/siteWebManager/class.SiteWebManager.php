@@ -43,7 +43,7 @@ class SiteWebManager {
 		$this->result = array();
 		if (!empty($cmd) && method_exists($this, $cmd)) {
 			$res = call_user_func(array($this, $cmd), $data);
-			if ($res === false) $this->result['error'] = 'Erreur : ProblÃ¨me avec la fonction '.$cmd.' de '.__CLASS__;
+			if ($res === false) $this->result['error'] = 'Erreur : Problème avec la fonction '.$cmd.' de '.__CLASS__;
 		}
 		return $this->result;
 	}
@@ -55,33 +55,35 @@ class SiteWebManager {
 	 */
 	public function init($data) {
 	
-		//Test avec BDD
-		$aDAO = new MenuDAO();
-		//var $i = 3;
-		$tx = '';
-		
-		$this->result['listPage'] = array();
-		
-		for($i = 1; $i < 15; $i++){
-			$a = $aDAO->read($i);
-			$n = $a->getTemplateStyleId();
-			$this->result['listPage'][] = array('id'=>"$i", 'lib'=>$n);
+		//------------RECUPERATION MENUS------------\\
+		$menuDAO = new MenuDAO();
+
+		$menuIds = $menuDAO->findAllId();
+		$menus = array();
+		foreach($menuIds as $id){
+			$menus[] = $menuDAO->read($id['id']);
 		}
 		
-		//Test Update
-		/*
-		$m1 = $aDAO->read(21);
-		$m1->setId(102);
-		$resultat = $aDAO->persist($m1);*/
+		//Affichage des Menus (enfin du titre)
+		for($i = 0; $i < count($menus); $i++){
+			$this->result['listPage'][] = array('id'=>$menus[$i]->getId(), 'lib'=>$menus[$i]->getTitle());
+		}
 		
-		//Test Insert
-		/*$m1 = $aDAO->read(101);
-		$m1->setId(103);
-		$resultat = $aDAO->persist($m1);*/
+		//------------RECUPERATION CONTENUS------------\\
+		$contentDAO = new ContentDAO();
+		$contentDAO = new ContentDAO();
+
+		$contentIds = $contentDAO->findAllId();
+		$contents = array();
+		foreach($contentIds as $id){
+			$contents[] = $contentDAO->read($id['id']);
+		}
 		
-		//Test Delete
-		/*$m1 = $aDAO->read(102);
-		$res = $aDAO->delete($m1);*/
+		//Affichage des Contents (enfin du titre)
+		for($i = 0; $i < count($contents); $i++){
+			$this->result['listPage'][] = array('id'=>$contents[$i]->getId(), 'lib'=>$contents[$i]->getTitle());
+		}
+		
 		
 		//Fils
 		//$this->result['listPage'][4]['children'] = array(array('id'=>"75i", 'lib'=>'fggg'));
