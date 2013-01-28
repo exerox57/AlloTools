@@ -19,7 +19,7 @@ class ContentDAO extends DAO{
 	
 	//Récuparation de la liste des ID Content
 	public function findAllId() {
-		$requete = $this->db->prepare('SELECT id FROM jml_content');
+		$requete = $this->db->prepare('SELECT id FROM jml_content ORDER BY id');
 		$requete->execute();
 		$tableIdContent = $requete->fetchAll(PDO::FETCH_ASSOC);
 		

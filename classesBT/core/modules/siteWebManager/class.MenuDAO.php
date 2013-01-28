@@ -19,7 +19,7 @@ class MenuDAO extends DAO{
 	
 	//Récupération de la liste de ID Menu
 	public function findAllId() {
-		$requete = $this->db->prepare('SELECT id FROM jml_menu');
+		$requete = $this->db->prepare('SELECT id FROM jml_menu ORDER by id');
 		$requete->execute();
 		$tableIdMenu = $requete->fetchAll(PDO::FETCH_ASSOC);
 		
