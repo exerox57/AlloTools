@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="50%" height="50%">
 	
 	<mx:Script>
 		<![CDATA[
@@ -74,18 +74,27 @@
 					for(name in obj){
 						switch(name){
 							case "listPage":
-								dg.dataProvider = obj[name];
+								adgArticle.dataProvider = obj[name];
 								
 								var h:HierarchicalData = new HierarchicalData(obj[name]);
 								h.childrenField = 'children';
-								adg.dataProvider = h;
+								adgArticle.dataProvider = h;
 								break;
-							case "listModule":
+							case "listMenu":
+								adgMenu.dataProvider = obj[name];
 								
+								var h1:HierarchicalData = new HierarchicalData(obj[name]);
+								h1.childrenField = 'children';
+								adgMenu.dataProvider = h1;
 								break;
 							case "article":
-								txtTitre.text = obj[name]["titre"];
-								content.text = obj[name]["contenu"];
+								titreArticle.text = obj[name]["titre"];
+								introArticle.text = obj[name]["intro"];
+								contentArticle.text = obj[name]["contenu"];
+								break;
+							case "menu":
+								titreMenu.text = obj[name]["titre"];
+								lienMenu.text = obj[name]["lien"];
 								break;
 							case "error":
 								Alert.show(obj[name], 'Erreur');
@@ -104,36 +113,93 @@
 			}
 			
 			
-			private function clickDg(event:ListEvent):void{
-				var id:String = dg.selectedItem["id"] ;
+			private function clickArticleDg(event:ListEvent):void{
+				var id:String = adgArticle.selectedItem["id"] ;
 				sender.send("openArticle", id);
-				
-				
 				
 				/* comm javascript
 				ExternalInterface.addCallback("err", err);
 				ExternalInterface.call("eddd", );*/
 			}
+			
+			private function clickMenuDg(event:ListEvent):void{
+				var id:String = adgMenu.selectedItem["id"] ;
+				sender.send("openMenu", id);
+				
+			}
+			private function clickModifierArticle(event:MouseEvent):void{
+				var parameters:Object = new Object();
+				parameters.id = adgArticle.selectedItem["id"] ;
+				parameters.titre = this.titreArticle.text ;
+				parameters.intro = this.introArticle.text ;
+				parameters.fulltext = this.contentArticle.text ;
+				
+				sender.send("updateArticle", parameters);
+			}
+			private function clickSupprimerArticle(event:MouseEvent):void{
+				
+			}
+			
+			private function clickModifierMenu(event:MouseEvent):void{
+				var parameters:Object = new Object();
+				parameters.id = adgMenu.selectedItem["id"] ;
+				parameters.titre = this.titreMenu.text ;
+				parameters.lien = this.lienMenu.text ;
+				
+				sender.send("updateMenu", parameters);
+			}
+			private function clickSupprimerMenu(event:MouseEvent):void{
+				
+			}
 		]]>
 	</mx:Script>
 	
-	<mx:AdvancedDataGrid id="adg" designViewDataType="tree" displayItemsExpanded="true">
-		<mx:columns>
-			<mx:AdvancedDataGridColumn  headerText="Id page" dataField="id" />
-			<mx:AdvancedDataGridColumn headerText="Libellé" dataField="lib" />
-		</mx:columns>
-	</mx:AdvancedDataGrid>
-	
-	<mx:DataGrid id="dg" width="300" itemClick="clickDg(event)">
-		<mx:columns>
-			<mx:DataGridColumn headerText="Id page" dataField="id" />
-			<mx:DataGridColumn headerText="Libellé" dataField="lib" />
-		</mx:columns>
-	</mx:DataGrid>
-	
-	<mx:HBox >
-		<mx:Label text="Titre :" />
-		<mx:TextInput id="txtTitre" />
+	<mx:HBox id="tables">
+		<mx:Label text="ARTICLES" />
+		<mx:AdvancedDataGrid id="adgArticle" width="300" designViewDataType="tree" displayItemsExpanded="true" itemClick="clickArticleDg(event)">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn  headerText="Id page" dataField="id" />
+				<mx:AdvancedDataGridColumn headerText="Libellé" dataField="lib" />
+			</mx:columns>
+		</mx:AdvancedDataGrid>
+		
+		<mx:Label text="MENUS" />
+		<mx:AdvancedDataGrid id="adgMenu" width="300" designViewDataType="tree" displayItemsExpanded="true" itemClick="clickMenuDg(event)">
+			<mx:columns>
+				<mx:AdvancedDataGridColumn  headerText="Id page" dataField="id" />
+				<mx:AdvancedDataGridColumn headerText="Libellé" dataField="lib" />
+			</mx:columns>
+		</mx:AdvancedDataGrid>
 	</mx:HBox>
-	<mx:RichTextEditor id="content" />
+	
+	
+	
+	<mx:HBox id="hbTitre">
+		<mx:Label text="Titre :" />
+		<mx:TextInput id="titreArticle" />
+		<mx:Button label="Modifier" click="clickModifierArticle(event)" />
+		<mx:Button label="Supprimer" click="clickSupprimerArticle(event)" />
+		
+		<mx:Label text="Titre :" />
+		<mx:TextInput id="titreMenu" />
+		<mx:Button label="Modifier" click="clickModifierMenu(event)" />
+		<mx:Button label="Supprimer" click="clickSupprimerMenu(event)" />
+	</mx:HBox>
+	
+	
+	<mx:HBox width="100%">
+		<mx:Label text="Intro :" />
+		<mx:TextInput id="introArticle" />
+		<mx:Label text="____________________________" />
+		<mx:Label text="Lien :" />
+		<mx:TextInput id="lienMenu" />
+	</mx:HBox>
+	
+
+	
+	<mx:RichTextEditor id="contentArticle" />
+	
 </mx:VBox>
+
+
+

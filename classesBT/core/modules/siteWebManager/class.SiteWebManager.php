@@ -3,12 +3,12 @@
 class SiteWebManager {
 	
 	/**
-	 * Contient les rÃ©sultats à renvoyer à PHP
+	 * Contient les rÃƒÂ©sultats Ã  renvoyer Ã  PHP
 	 */
 	private $result;
 	
 	/**
-	 * Identifiant de la société à qui appartient le site
+	 * Identifiant de la sociÃ©tÃ© Ã  qui appartient le site
 	 * @var string
 	 */
 	private $idRevend;
@@ -33,27 +33,27 @@ class SiteWebManager {
 	}
 	
 	/**
-	 * Création d'une instance du module (préinitialisation)
-	 * @param string $idRevend Identifiant de la société connectée
+	 * CrÃ©ation d'une instance du module (prÃ©initialisation)
+	 * @param string $idRevend Identifiant de la sociÃ©tÃ© connectÃ©e
 	 */
 	public static function create($idRevend) {
-		// Préinitialisation
+		// PrÃ©initialisation
 		// ...
-		// ... Gestion d'un autre paramètre, ou d'un objet englobant.... A voir en fonction de l'UML
+		// ... Gestion d'un autre paramÃ¨tre, ou d'un objet englobant.... A voir en fonction de l'UML
 		// ...
 		return new SiteWebManager($idRevend);
 	}
 	
 	/**
 	 * Dispatcheur de commande
-	 * @param string $cmd Nom de la fonction à exéctuer
-	 * @param array $data Paramètre de la fonction à exécuter
+	 * @param string $cmd Nom de la fonction Ã  exÃ©ctuer
+	 * @param array $data ParamÃ¨tre de la fonction Ã  exÃ©cuter
 	 */
 	public function parseCommand($cmd, $data) {
 		$this->result = array();
 		if (!empty($cmd) && method_exists($this, $cmd)) {
 			$res = call_user_func(array($this, $cmd), $data);
-			if ($res === false) $this->result['error'] = 'Erreur : Problème avec la fonction '.$cmd.' de '.__CLASS__;
+			if ($res === false) $this->result['error'] = 'Erreur : ProblÃ¨me avec la fonction '.$cmd.' de '.__CLASS__;
 		}
 		return $this->result;
 	}
@@ -76,7 +76,7 @@ class SiteWebManager {
 		
 		//Affichage des Menus (enfin du titre)
 		for($i = 0; $i < count($this->menus); $i++){
-			$this->result['listPage'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getTitle());
+			$this->result['listMenu'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getTitle());
 		}
 		
 		//------------RECUPERATION CONTENUS------------\\
@@ -101,7 +101,7 @@ class SiteWebManager {
 	}
 	
 	/*
-	* Retourne le Menu avec l'id recherché
+	* Retourne le Menu avec l'id recherchÃ©
 	* @param int $id
 	*/
 	public function trouverMenu($id){
@@ -113,11 +113,11 @@ class SiteWebManager {
 			else
 				$i++;
 		}
-		return $i;
+		return $this->menus[$i];
 	}
 	
 	/*
-	* Retourne l'Article avec l'id recherché
+	* Retourne l'Article avec l'id recherchÃ©
 	* @param int $id
 	*/
 	public function trouverArticle($id){
@@ -134,38 +134,43 @@ class SiteWebManager {
 	
 	/*
 	* Affiche les details d'un Menu
-	* et les renvois à $result['menu'] coté Flex
+	* et les renvois Ã  $result['menu'] cotÃ© Flex
 	* @param int $id
 	*/
 	public function openMenu($id){
 		//Debug::F($id);
 		$selectedMenu = $this->trouverMenu($id);
-		$this->result['menu'] = array('titre'=>$selectedMenu->getTitle(), 'contenu'=>$selectedMenu->getLink());
-		//Affichage à completer
+		$this->result['menu'] = array('titre'=>$selectedMenu->getTitle(), 'lien'=>$selectedMenu->getLink());
+		//Affichage Ã  completer
 	}
+	
 	
 	/*
 	* Affiche les details d'un Article
-	* et les renvois à $result['article'] coté Flex
+	* et les renvois Ã  $result['article'] cotÃ© Flex
 	* @param int $id
 	*/
 	public function openArticle($id){
 		//Debug::F($id);
 		$selectedArticle = $this->trouverArticle($id);
-		$this->result['article'] = array('titre'=>$selectedArticle->getTitle(), 'contenu'=>$selectedArticle->getIntrotext());
-		//Affichage à completer
+		$this->result['article'] = array('titre'=>$selectedArticle->getTitle(), 'intro'=>$selectedArticle->getIntrotext(), 'contenu'=>$selectedArticle->getFulltext());
+		//Affichage Ã  completer
 	}
 	
 	/*
-	* Fonction de mise à jour d'un Article
+	* Fonction de mise Ã  jour d'un Article
 	* @param int $id
 	*/
-	public function updateArticle($id){
-		$selectedArticle = $this->trouverArticle($id);
+	public function updateArticle($params){
+		$selectedArticle = $this->trouverArticle($params['id']);
 		/*
-			Procéder aux changements dans l'objet
-			en récupérant les valeurs des textbox
+			ProcÃ©der aux changements dans l'objet
+			en rÃ©cupÃ©rant les valeurs des textbox
 		*/
+		$selectedArticle->setTitle($params['titre']);
+		$selectedArticle->setIntrotext($params['intro']);
+		$selectedArticle->setFulltext($params['fulltext']);
+
 		$articleDAO = new ContentDAO();
 		if($articleDAO->persist($selectedArticle)){
 			/*
@@ -179,24 +184,23 @@ class SiteWebManager {
 	}
 	
 	/*
-	* Fonction de mise à jour d'un Menu
+	* Fonction de mise Ã  jour d'un Menu
 	* @param int $id
 	*/
-	public function updateMenu($id){
-		$selectedMenu = $this->trouverMenu($id);
+	public function updateMenu($params){
+		$selectedMenu = $this->trouverMenu($params['id']);
 		/*
-			Procéder aux changements dans l'objet
-			en récupérant les valeurs des textbox
+			ProcÃ©der aux changements dans l'objet
+			en rÃ©cupÃ©rant les valeurs des textbox
 		*/
+		$selectedMenu->setTitle($params['titre']);
+		$selectedMenu->setLink($params['lien']);
+
 		$menuDAO = new MenuDAO();
 		if($menuDAO->persist($selectedMenu)){
-			/*
-				Message de confirmation
-			*/
+			
 		}else{
-			/*
-				Message d'erreur
-			*/
+			
 		}
 	}
 	

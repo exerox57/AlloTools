@@ -35,13 +35,12 @@ class MenuDAO extends DAO{
 		return ($nb['nb'] == 1) ? true : false;
 	}
 	
-	//Fonction d'Ajout / Mise Ã  jour d'un Menu
+	//Fonction d'Ajout / Mise à jour d'un Menu
 	public function persist(Menu $menu) {
 		// Cas d'un update
 		if($this->exists($menu->getId())) {
 			$req = $this->db->prepare(
 				'UPDATE jml_menu SET 
-				id 				  = :id,
 				menutype 		  = :menutype,
 				title 			  = :title,
 				alias 			  = :alias,
