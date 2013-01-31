@@ -216,8 +216,30 @@ class SiteWebManager {
 	*/
 	public function supprimerMenu($id){
 		$menu = $this->trouverMenu($id);
+	
 		$menuDAO = new MenuDAO();
-		$menuDAO->delete($menu);
+		if($menuDAO->delete($menu)){
+			
+		}
+			//Debug::F($content->getId());
+		
+			//Debug::F("merde\n");
+		//Retour message
+	}
+
+	/*
+	* Fonction de suppression d'un Article
+	* @param int $id
+	*/
+	public function supprimerArticle($id){
+
+		$content = $this->trouverArticle($id);
+		Debug::F($id);
+		$contentDAO = new ContentDAO();
+		if($contentDAO->delete($content))
+			Debug::F($content->getId());
+		else
+			Debug::F("merde\n");
 		//Retour message
 	}
 	

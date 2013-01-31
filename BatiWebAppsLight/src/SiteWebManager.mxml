@@ -136,9 +136,6 @@
 				
 				sender.send("updateArticle", parameters);
 			}
-			private function clickSupprimerArticle(event:MouseEvent):void{
-				
-			}
 			
 			private function clickModifierMenu(event:MouseEvent):void{
 				var parameters:Object = new Object();
@@ -148,9 +145,15 @@
 				
 				sender.send("updateMenu", parameters);
 			}
+			
 			private function clickSupprimerMenu(event:MouseEvent):void{
 				var id:String = adgMenu.selectedItem["id"] ;
 				sender.send("supprimerMenu", id);
+			}
+			
+			private function clickSupprimerArticle(event:MouseEvent):void{
+				var id:String = adgArticle.selectedItem["id"] ;
+				sender.send("supprimerArticle", id);
 			}
 		]]>
 	</mx:Script>
@@ -159,7 +162,7 @@
 		<mx:Label text="ARTICLES" />
 		<mx:AdvancedDataGrid id="adgArticle" width="300" designViewDataType="tree" displayItemsExpanded="true" itemClick="clickArticleDg(event)">
 			<mx:columns>
-				<mx:AdvancedDataGridColumn  headerText="Id page" dataField="id" />
+				<mx:AdvancedDataGridColumn headerText="Id page" dataField="id" />
 				<mx:AdvancedDataGridColumn headerText="Libellé" dataField="lib" />
 			</mx:columns>
 		</mx:AdvancedDataGrid>
