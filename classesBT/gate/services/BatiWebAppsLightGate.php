@@ -47,13 +47,14 @@ class BatiWebAppsLightGate{
 	private function includeFiles() {
 		
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.SiteWebManager.php');
-		//require_once($_SERVEUR['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.ConnexionBase.php');
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.Dao.php');
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.DBFactory.php');
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.Menu.php');
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.MenuDAO.php');
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.Content.php');
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.ContentDAO.php');
+		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.Module.php');
+		require_once($_SERVER['DOCUMENT_ROOT'].'/classesBT/core/modules/siteWebManager/class.ModuleDAO.php');
 
 	}
 }

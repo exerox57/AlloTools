@@ -73,10 +73,18 @@ class SiteWebManager {
 		foreach($menuIds as $id){
 			$this->menus[] = $menuDAO->read($id['id']);
 		}
-		
+
 		//Affichage des Menus (enfin du titre)
 		for($i = 0; $i < count($this->menus); $i++){
-			$this->result['listMenu'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getTitle());
+			$pId = $this->menus[$i]->getParentId();
+
+			//Classement parent/fils
+			$this->result['listMenu'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+			for($j = 0; $j < count($this->menus); $j++){
+				if($pId == $this->result['listMenu'][$j]['id']){
+					$this->result['listMenu'][$j]['children'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+				}
+			}
 		}
 		
 		//------------RECUPERATION CONTENUS------------\\
@@ -93,9 +101,6 @@ class SiteWebManager {
 			$this->result['listPage'][] = array('id'=>$this->contents[$i]->getId(), 'lib'=>$this->contents[$i]->getTitle());
 		}
 		
-		
-		//Fils
-		//$this->result['listPage'][4]['children'] = array(array('id'=>"75i", 'lib'=>'fggg'));
 		
 		$this->result['listModule'] = array();
 	}
@@ -159,7 +164,7 @@ class SiteWebManager {
 	
 	/*
 	* Fonction de mise à jour d'un Article
-	* @param int $id
+	* @param Content $params
 	*/
 	public function updateArticle($params){
 		$selectedArticle = $this->trouverArticle($params['id']);
@@ -185,7 +190,7 @@ class SiteWebManager {
 	
 	/*
 	* Fonction de mise à jour d'un Menu
-	* @param int $id
+	* @param Menu $arams
 	*/
 	public function updateMenu($params){
 		$selectedMenu = $this->trouverMenu($params['id']);
@@ -202,6 +207,18 @@ class SiteWebManager {
 		}else{
 			
 		}
+	}
+
+
+	/*
+	* Fonction de suppression d'un Menu
+	* @param int $id
+	*/
+	public function supprimerMenu($id){
+		$menu = $this->trouverMenu($id);
+		$menuDAO = new MenuDAO();
+		$menuDAO->delete($menu);
+		//Retour message
 	}
 	
 	

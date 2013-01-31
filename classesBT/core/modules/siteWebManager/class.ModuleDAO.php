@@ -1,11 +1,11 @@
 <?php
-class ContentDAO extends DAO{
+class ModuleDAO extends DAO{
 	
 	public function create($object) {
 	
 	}
 	
-	//Retourne un Content spécifique
+	//Retourne un Module spécifique
 	//OK
 	public function read($no) {
 		$ligne1 = $this->db->prepare('SELECT * FROM jml_module where id=?');
@@ -14,16 +14,16 @@ class ContentDAO extends DAO{
 		$ligne = $ligne1->fetch(PDO::FETCH_ASSOC);
 		
 		//return $ligne;
-		return new Content($ligne);
+		return new Module($ligne);
 	}
 	
 	//Récuparation de la liste des ID Module
 	public function findAllId() {
 		$requete = $this->db->prepare('SELECT id FROM jml_module ORDER BY id');
 		$requete->execute();
-		$tableIdContent = $requete->fetchAll(PDO::FETCH_ASSOC);
+		$tableIdModule = $requete->fetchAll(PDO::FETCH_ASSOC);
 		
-		return $tableIdContent;
+		return $tableIdModule;
 	}
 	
 	//vérifie la présence ou non de l'id dans la table
@@ -36,7 +36,7 @@ class ContentDAO extends DAO{
 		return ($nb['nb'] == 1) ? true : false;
 	}
 	
-	//Fonction d'Ajout / Mise à  jour d'un Content
+	//Fonction d'Ajout / Mise à  jour d'un Module
 	public function persist(Module $mod) {
 		// Cas d'un update
 		if($this->exists($mod->getId())) {
