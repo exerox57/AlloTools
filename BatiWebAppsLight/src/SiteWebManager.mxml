@@ -149,7 +149,8 @@
 				sender.send("updateMenu", parameters);
 			}
 			private function clickSupprimerMenu(event:MouseEvent):void{
-				
+				var id:String = adgMenu.selectedItem["id"] ;
+				sender.send("supprimerMenu", id);
 			}
 		]]>
 	</mx:Script>
