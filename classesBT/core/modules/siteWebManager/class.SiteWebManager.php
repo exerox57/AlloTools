@@ -79,13 +79,51 @@ class SiteWebManager {
 			$pId = $this->menus[$i]->getParentId();
 
 			//Classement parent/fils
-			$this->result['listMenu'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
-			for($j = 0; $j < count($this->menus); $j++){
+			$trouver = false;
+			for($j = 0; $j < count($this->menus); $j++){  
+			// OPTIMISABLE
 				if($pId == $this->result['listMenu'][$j]['id']){
 					$this->result['listMenu'][$j]['children'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+					$trouver = true;
+
+				}else{
+					//Recherche dans les fils du fils
+					for($k = 0; $k < count($this->menus); $k++){
+	 					if($pId == $this->result['listMenu'][$j]['children'][$k]['id']){
+							$this->result['listMenu'][$j]['children'][$k]['children'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+							$trouver = true;
+						}
+					}
 				}
 			}
-		}
+			if(!$trouver)
+				$this->result['listMenu'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+		 }
+
+
+			/*	if($pId == $this->result['listMenu'][$j]['id']){
+					//Recherche fils du fils
+					$trouve = false;
+					$parentId = $this->menus[$j]->getId();
+					for($k = 0; $k < count($this->menus); $k++){
+						if($this->result['listMenu'][$j]['children'][$k]['id'] == $parentId){
+							$this->result['listMenu'][$k]['children'][$k]['children'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+							
+							$trouve = true;
+						}
+						//Debug::F($pId.' == '.$this->result['listMenu'][$j]['children'][$k]['id'].';;');
+					}
+					if(!$trouve)
+						$this->result['listMenu'][$j]['children'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+
+					$trouver = true;
+				}
+			}
+			if(!$trouver)
+				$this->result['listMenu'][] = array('id'=>$this->menus[$i]->getId(), 'lib'=>$this->menus[$i]->getAlias());
+		}*/
+
+		//$this->result['listMenu'][0]['children'][0]['children'][] = array('id'=>'Test', 'lib'=>$this->result['listMenu'][0]['children'][0]['id']);
 		
 		//------------RECUPERATION CONTENUS------------\\
 		$contentDAO = new ContentDAO();

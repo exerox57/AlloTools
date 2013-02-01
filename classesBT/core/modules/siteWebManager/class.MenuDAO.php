@@ -25,6 +25,14 @@ class MenuDAO extends DAO{
 		
 		return $tableIdMenu;
 	}
+
+	public function findAllIdByParent() {
+		$requete = $this->db->prepare('SELECT id FROM jml_menu ORDER by parent_id');
+		$requete->execute();
+		$tableIdMenu = $requete->fetchAll(PDO::FETCH_ASSOC);
+		
+		return $tableIdMenu;
+	}
 	
 	//vérifie la présence ou non de l'id dans la table
 	public function exists($id) {
