@@ -14,6 +14,7 @@
   </compiler>
   <applications>
     <application path="BatiWebAppsLight.mxml"/>
+    <application path="AjoutPage.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
